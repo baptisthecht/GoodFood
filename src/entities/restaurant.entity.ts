@@ -4,10 +4,8 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne,
   OneToMany,
   OneToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { SpecialityEnum } from './enums/speciality.enum';
@@ -27,6 +25,8 @@ export class RestaurantEntity extends TimestampEntity {
 
   @OneToOne(() => AddressEntity, (a) => a.restaurant, {
     onDelete: 'CASCADE',
+    cascade: true,
+    eager: true,
   })
   @JoinColumn({ name: 'addressId' })
   address: AddressEntity;
@@ -37,11 +37,14 @@ export class RestaurantEntity extends TimestampEntity {
   @Column({ default: true })
   isActive: boolean;
 
-  @ManyToMany(() => MealEntity, (m) => m.restaurants)
+  @ManyToMany(() => MealEntity, (m) => m.restaurants, { eager: true })
   @JoinTable({ name: 'restaurantMeal' })
   meals: MealEntity[];
 
-  @ManyToMany(() => DeliveryTypeEntity, (dt) => dt.restaurants)
+  @ManyToMany(() => DeliveryTypeEntity, (dt) => dt.restaurants, {
+    cascade: true,
+    eager: true,
+  })
   @JoinTable({ name: 'restaurantDeliveryType' })
   activeDeliveryTypes: DeliveryTypeEntity[];
 

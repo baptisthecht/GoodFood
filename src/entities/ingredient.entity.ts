@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryColumn,
@@ -23,10 +24,13 @@ export class IngredientEntity extends TimestampEntity {
   @Column()
   type: FoodTypeEnum;
 
-  @ManyToMany(() => ProviderEntity, (provider) => provider.ingredients)
+  @ManyToMany(() => ProviderEntity, (provider) => provider.ingredients, {
+    cascade: true,
+  })
   providers: ProviderEntity[];
 
-  @ManyToMany(() => AllergenEntity, (a) => a.ingredients)
+  @ManyToMany(() => AllergenEntity, (a) => a.ingredients, { cascade: true })
+  @JoinTable({ name: 'ingredientAllergen' })
   allergens: AllergenEntity[];
 
   @ManyToMany(() => MealEntity, (m) => m.ingredients)

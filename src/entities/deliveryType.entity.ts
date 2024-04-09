@@ -30,6 +30,5 @@ export class DeliveryTypeEntity extends TimestampEntity {
   deliveryMen: DeliveryManEntity[];
 
   @ManyToMany(() => RestaurantEntity, (r) => r.activeDeliveryTypes)
-  @JoinTable({ name: 'restaurantDeliveryType' })
   restaurants: RestaurantEntity[];
 }

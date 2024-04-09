@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { SpecialityEnum } from './enums/speciality.enum';
 import { TimestampEntity } from './timestamp.entity';
 import { AddressEntity } from './address.entity';
@@ -27,7 +33,7 @@ export class UserEntity extends TimestampEntity {
   @Column('varchar', { array: true, nullable: true })
   interests: SpecialityEnum[];
 
-  @OneToMany(() => AddressEntity, (address) => address.user)
+  @OneToMany(() => AddressEntity, (address) => address.user, { cascade: true })
   addresses: AddressEntity[];
 
   @OneToMany(() => OrderEntity, (order) => order.user)

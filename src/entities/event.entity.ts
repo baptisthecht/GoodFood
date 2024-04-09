@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -26,6 +27,7 @@ export class EventEntity extends TimestampEntity {
   @Column()
   capacity: number;
 
-  @ManyToOne(() => RestaurantEntity, (r) => r.events)
+  @ManyToOne(() => RestaurantEntity, (r) => r.events, { cascade: true })
+  @JoinColumn({ name: 'restaurantId' })
   restaurant: RestaurantEntity;
 }

@@ -14,11 +14,11 @@ export class OrderEntity {
   @PrimaryGeneratedColumn()
   orderId: number;
 
-  @ManyToOne(() => UserEntity, (user) => user.orders)
+  @ManyToOne(() => UserEntity, (user) => user.orders, { cascade: true })
   @JoinColumn({ name: 'userId' })
   user: UserEntity;
 
-  @ManyToMany(() => MealEntity, (meal) => meal.orders)
+  @ManyToMany(() => MealEntity, (meal) => meal.orders, { cascade: true })
   @JoinTable({
     name: 'orderMeal',
     joinColumn: {

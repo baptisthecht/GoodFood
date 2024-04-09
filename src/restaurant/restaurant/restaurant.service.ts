@@ -10,10 +10,17 @@ export class RestaurantService {
   constructor(
     @InjectRepository(RestaurantEntity)
     private readonly restaurantRepository: Repository<RestaurantEntity>,
-    @InjectRepository(AddressEntity)
-    private readonly addressRepository: Repository<AddressEntity>,
-    private readonly addressService: AddressService,
   ) {}
+
+  async getOne(id: number): Promise<RestaurantEntity> {
+    const restaurant = await this.restaurantRepository.findOne({
+      where: { restaurantId: id },
+    });
+    if (!restaurant) {
+      throw new HttpException('Restaurant not found', 404);
+    }
+    return restaurant;
+  }
 
   async getByCity(city: string): Promise<RestaurantEntity[]> {
     return this.restaurantRepository.find({
@@ -33,43 +40,27 @@ export class RestaurantService {
   }
 
   async createRestaurant(dto: AddRestaurantDto): Promise<RestaurantEntity> {
-    // REMPLACER PAR UN DTO
-    const newAddress = this.addressRepository.create({
-      number: dto.adressNumber,
-      city: dto.adressCity,
-      zipCode: dto.adressZipCode,
-      street: dto.adressStreet,
-      country: dto.adressCountry,
-      locationX: dto.adressLocationX,
-      locationY: dto.adressLocationY,
-    });
-    // PASSER LE DTO
-    const address = await this.addressService
-      .createAddress(newAddress)
-      .catch((e) => {
-        throw new HttpException(e.message, 502);
-      });
-
-    const newRestaurant = this.restaurantRepository.create({
-      name: dto.name,
+    const restaurant = this.restaurantRepository.create({
       type: dto.type,
-    });
-
-    const restaurant = await this.restaurantRepository
-      .save({
-        ...newRestaurant,
-        address: {
-          addressId: address.addressId,
+      name: dto.name,
+      isActive: false,
+      address: {
+        number: dto.adressNumber,
+        street: dto.adressStreet,
+        city: dto.adressCity,
+        zipCode: dto.adressZipCode,
+        country: dto.adressCountry,
+        locationX: dto.adressLocationX,
+        locationY: dto.adressLocationY,
+      },
+      activeDeliveryTypes: [
+        {
+          basePrice: 0,
+          name: 'Delivery',
+          priceByKm: 0,
         },
-      })
-      .catch((e) => {
-        throw new HttpException(e.message, 502);
-      });
-
-    await this.addressService.setRestaurantId(
-      address.addressId,
-      restaurant.restaurantId,
-    );
-    return restaurant;
+      ],
+    });
+    return this.restaurantRepository.save(restaurant);
   }
 }

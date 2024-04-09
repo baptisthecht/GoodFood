@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
@@ -34,6 +35,8 @@ export class DeliveryManEntity extends TimestampEntity {
   @ManyToOne(
     () => DeliveryTypeEntity,
     (deliveryType) => deliveryType.deliveryMen,
+    { cascade: true },
   )
+  @JoinColumn({ name: 'deliveryTypeId' })
   deliveryType: DeliveryTypeEntity;
 }

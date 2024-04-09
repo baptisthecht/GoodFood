@@ -23,7 +23,7 @@ export class MealEntity extends TimestampEntity {
   @Column({ unique: true })
   name: string;
 
-  @ManyToMany(() => IngredientEntity, (i) => i.meals)
+  @ManyToMany(() => IngredientEntity, (i) => i.meals, { cascade: true })
   @JoinTable({ name: 'mealIngredient' })
   ingredients: IngredientEntity[];
 
@@ -33,7 +33,7 @@ export class MealEntity extends TimestampEntity {
   @Column()
   price: number;
 
-  @ManyToMany(() => RestaurantEntity, (r) => r.meals)
+  @ManyToMany(() => RestaurantEntity, (r) => r.meals, { cascade: true })
   restaurants: RestaurantEntity[];
 
   @ManyToMany(() => OrderEntity, (m) => m.meals)

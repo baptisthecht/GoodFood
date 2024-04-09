@@ -1,8 +1,8 @@
 import {
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { IngredientEntity } from './ingredient.entity';
@@ -20,5 +20,6 @@ export class ProviderEntity extends TimestampEntity {
   address: string;
 
   @ManyToMany(() => IngredientEntity, (ingredient) => ingredient.providers)
+  @JoinTable({ name: 'providerIngredient' })
   ingredients: IngredientEntity[];
 }

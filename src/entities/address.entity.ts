@@ -44,6 +44,5 @@ export class AddressEntity extends TimestampEntity {
   @OneToOne(() => RestaurantEntity, (restaurant) => restaurant.address, {
     nullable: true,
   })
-  @JoinColumn({ name: 'restaurantId' })
   restaurant: RestaurantEntity;
 }
